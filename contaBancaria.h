@@ -1,3 +1,4 @@
+
 // definição do tipo
 typedef struct {
  int numero;
