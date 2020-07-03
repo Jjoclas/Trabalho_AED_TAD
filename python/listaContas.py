@@ -17,13 +17,20 @@ class Lista:
     def imprimeConta(self,numero):
        conta = self.indentificaConta(numero)
        conta.imprime()
+    
     def indentificaConta(self,numero):
         numero = numero.split(" ")
         numeros = [int(int(val)) for val in numero]
-        
+        retorno = True
         for conta in self.lista:
-            if conta.numero == numero:
+            if conta.agencia == numeros[0] and conta.numero == numeros[1]:
+                retorno = False
                 return conta
+        if retorno:
+            print('Agencia ou numero da conta invalidos')
+            print('Tente inserir a conta novamente')
+            self.indentificaConta(input('Formato (XXXX 12345). Agencia (espaço) numero da conta.\n'))
+    
     @staticmethod
     def agencias():
         agencias = {

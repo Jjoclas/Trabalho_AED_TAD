@@ -1,19 +1,51 @@
 import re
+import sys
 from contaBancaria import ContaBancaria
-from listaContas import Lista as lt
 
 
 
-def menu ():
-    print('Bem vindo ao banco APK Investimentos')
+
+def menu (lista):
+    print('APK Investimentos')
     
     print('1- Criar Conta')
     print('2- Realizar Deposito')
     print('3- Realizar Saque')
     print('4- Transferencia entre contas')
+    print('5- Consultar conta')
     print('0- Sair')
 
-    escolha = int(input('Escolha uma das opções para continuar'))
+    escolha = int(input('Escolha uma das opções para continuar \n'))
+    if escolha == 1:
+        criarConta(lista)
+        voltar(lista)
+    elif escolha==2:
+        realizarDeposito(lista)
+        voltar(lista)
+    elif escolha==3:
+        realizarSaque(lista)
+        voltar(lista)
+    elif escolha==4:
+        realizarTransferencia(lista)
+        voltar(lista)
+    elif escolha==5:
+        realizaConsulta(lista)
+        voltar(lista)
+    elif escolha==0:
+        finaliza()
+    else:
+        print('escolha uma opção valida')
+        menu(lista)
+def finaliza():
+    print('Finalizando programa')
+    sys.exit()   
+
+def voltar(lista):
+    escolha = int(input('Para voltar ao menu digite 1. Para sair digite outro \n'))
+    if escolha == 1:
+        menu(lista)
+    else:
+        finaliza()
 
 def criarConta(lista):
     agencia = defAgencia()
@@ -26,24 +58,50 @@ def criarConta(lista):
 
     print('Os dados da sua conta são:')
     conta.imprime()
-def realizarDeposito():
-    valor = validaValor()
-    conta = ()
 
+def realizarDeposito(lista):
+    valor = validaValor()
+    conta = lista.indentificaConta(input('Informe a agencia e o numero da conta no formato (XXXX 12345). Separados por espaço\n'))
+    conta.deposito(valor)
+   
+def realizarSaque(lista):
+    valor = validaValor()
+    conta = lista.indentificaConta(input('Informe a agencia e o numero da conta no formato (XXXX 12345). Separados por espaço\n'))
+    conta.saque(valor)
+
+def realizarTransferencia(lista):
+    envia = lista.indentificaConta(input('De qual conta será transferido?\n Formato (XXXX 12345). Separados por espaço\n'))
+    valor = validaValor()
+    recebe = lista.indentificaConta(input('Para qual conta será transferido? \n Formato (XXXX 12345). Separados por espaço\n'))
+    if envia.saque(valor):
+        recebe.deposito(valor)
+        print('transferencia concluida com sucesso')
+
+def realizaConsulta(lista):
+    conta = lista.indentificaConta(input('Informe a agencia e o numero da conta no formato (XXXX 12345). Separados por espaço\n'))
+    conta.imprime()
 
 def validaValor():
-    saldo = int(input('Informe o valor do seu deposito. \n'))
+    saldo = int(input('Informe o valor. \n'))
     if saldo>0:
         return saldo
     else:
         print('Valor invalido, por favor preencha novamente')
         validaValor()
+def agencias():
+    agencias = {
+        'Sao Paulo' : 1243,
+        'Rio de Janeiro' : 3421,
+        'Belo Horizonte' : 1001,
+        'Salvador' : 2134
+    }
+    return agencias
 def defAgencia():
     mostraAgencias()
     agencia =input('Escolha a cidade que melhor te atenda. \n')
     retorno = True
     print(agencia)
-    for cidades, numero in lt.agencias().items():
+    for cidades, numero in agencias().items():
         if cidades.lower() == agencia.lower():
             agencia = numero
             retorno = False
@@ -55,7 +113,7 @@ def defAgencia():
 
 def mostraAgencias():
     n =1
-    for keys in lt.agencias().keys():
+    for keys in agencias().keys():
         print(keys)
         n+=1
 
